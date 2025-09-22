@@ -8,9 +8,9 @@ import torch.optim as optim
 # We calculate the delta value and then the loss here becomes delta^2
 
 
-class Actor(nn.Module):
+class Critic(nn.Module):
     def __init__(self, input_dim , hidden_dim , output_dim,alpha=0.001):
-        super(Actor,self).__init__()
+        super(Critic,self).__init__()
         self.w1=nn.Linear(input_dim,hidden_dim)
         self.w2=nn.Linear(hidden_dim,hidden_dim)
         self.w3=nn.Linear(hidden_dim,output_dim)
