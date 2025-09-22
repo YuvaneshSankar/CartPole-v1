@@ -21,7 +21,7 @@ class Critic(nn.Module):
     def forward(self,state):
         x=F.relu(self.w1(state))
         x=F.relu(self.w2(x))
-        x=F.softmax(self.w3(x),dim=-1)
+        x=self.w3(x)  # No activation for value estimation - linear output
         return x
     
     def backward(self,loss):

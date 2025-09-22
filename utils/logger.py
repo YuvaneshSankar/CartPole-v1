@@ -78,13 +78,13 @@ class RLLogger:
         
         return {
             'total_episodes': len(self.episode_rewards),
-            'avg_reward': np.mean(self.episode_rewards),
-            'std_reward': np.std(self.episode_rewards),
-            'max_reward': np.max(self.episode_rewards),
-            'min_reward': np.min(self.episode_rewards),
-            'avg_length': np.mean(self.episode_lengths),
-            'running_avg_reward': np.mean(self.running_rewards),
-            'solved': np.mean(self.running_rewards) >= 195  # CartPole threshold
+            'avg_reward': float(np.mean(self.episode_rewards)),
+            'std_reward': float(np.std(self.episode_rewards)),
+            'max_reward': float(np.max(self.episode_rewards)),
+            'min_reward': float(np.min(self.episode_rewards)),
+            'avg_length': float(np.mean(self.episode_lengths)),
+            'running_avg_reward': float(np.mean(self.running_rewards)),
+            'solved': bool(np.mean(self.running_rewards) >= 195)  # CartPole threshold
         }
     
     def save_logs(self):

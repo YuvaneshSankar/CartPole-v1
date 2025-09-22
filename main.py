@@ -90,15 +90,15 @@ class ActorCriticAgent:
             dones: List of done flags
             log_probs: List of action log probabilities
         """
-        states = torch.FloatTensor(states).to(self.device)
-        rewards = torch.FloatTensor(rewards).to(self.device)
-        next_states = torch.FloatTensor(next_states).to(self.device)
-        dones = torch.FloatTensor(dones).to(self.device)
+        states = torch.FloatTensor(np.array(states)).to(self.device)
+        rewards = torch.FloatTensor(np.array(rewards)).to(self.device)
+        next_states = torch.FloatTensor(np.array(next_states)).to(self.device)
+        dones = torch.FloatTensor(np.array(dones)).to(self.device)
         log_probs = torch.stack(log_probs).to(self.device)
         
         # Calculate state values
-        state_values = self.critic(states).squeeze()
-        next_state_values = self.critic(next_states).squeeze()
+        state_values = self.critic(states).squeeze(-1)  # Ensure 1D tensor
+        next_state_values = self.critic(next_states).squeeze(-1)  # Ensure 1D tensor
         
         # Calculate TD targets (this is Rt + gamma*V(St+1))
         td_targets = rewards + self.gamma * next_state_values * (1 - dones)
@@ -106,7 +106,7 @@ class ActorCriticAgent:
         # Calculate TD errors (this is the delta formula = Rt + gamma*V(St+1) - V(St))
         td_errors = td_targets.detach() - state_values
 
-        # Critic loss (this is delta²)
+        # Critic loss (this is delta²) - ensure same shape
         critic_loss = F.mse_loss(state_values, td_targets.detach())
         # MSE loss is: mean((predicted - target)^2) = mean((V(St) - td_targets)^2) = mean(delta^2)
 
