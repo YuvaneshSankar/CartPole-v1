@@ -5,6 +5,7 @@ import torch.optim as optim
 
 # Input -> state
 # Output -> one scalar value
+# We calculate the delta value and then the loss here becomes delta^2
 
 
 class Actor(nn.Module):
