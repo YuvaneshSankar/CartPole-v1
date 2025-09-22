@@ -100,17 +100,20 @@ class ActorCriticAgent:
         state_values = self.critic(states).squeeze()
         next_state_values = self.critic(next_states).squeeze()
         
-        # Calculate TD targets
+        # Calculate TD targets (this is Rt + gamma*V(St+1))
         td_targets = rewards + self.gamma * next_state_values * (1 - dones)
-        
-        # Calculate TD errors (advantages)
+
+        # Calculate TD errors (this is the delta formula = Rt + gamma*V(St+1) - V(St))
         td_errors = td_targets.detach() - state_values
-        
-        # Critic loss (MSE)
+
+        # Critic loss (this is delta²)
         critic_loss = F.mse_loss(state_values, td_targets.detach())
-        
-        # Actor loss (Policy Gradient with advantage)
+        # MSE loss is: mean((predicted - target)^2) = mean((V(St) - td_targets)^2) = mean(delta^2)
+
+        # Actor loss (this is delta * ln(pie(at|st)))
         actor_loss = -(log_probs * td_errors.detach()).mean()
+        # This is: -mean(ln(pie(at|st)) * delta) = -delta * ln(pie(at|st))
+
         
         # Update critic
         self.critic.backward(critic_loss)
